@@ -9,7 +9,7 @@
                 <div class="img"><img src="{$value.image}" /></div>
                 <div class="info">
                     <h3>{$value.title}</h3>
-                    <p>{$value.description}</p>
+                    {if="$value.description"}<p>{$value.description}</p>{/if}
                     <p class="price">{$value.price}</p>
                 </div>
             </a>
