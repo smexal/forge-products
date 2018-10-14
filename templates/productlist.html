@@ -12,6 +12,9 @@
                     {if="$value.description"}<p>{$value.description}</p>{/if}
                     <p class="price">{$value.price}</p>
                 </div>
+                <div class="actions">
+                    {$value.add_to_cart}
+                </div>
             </a>
         </div>
         {if="($key+1)%4==0"}

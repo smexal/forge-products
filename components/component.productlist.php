@@ -50,6 +50,12 @@ class ProductlistComponent extends Component {
             'status' => 'published'
         ]);
         $products = [];
+
+        $addToCart = false;
+        if(App::instance()->mm->isActive('forge-shoppingcart')) {
+            $addToCart = true;
+        }
+
         foreach($items as $product) {
             $link = '';
             if(Settings::get('forge-products-has-detail')) {
@@ -63,6 +69,7 @@ class ProductlistComponent extends Component {
                 'title' => $product->getMeta('title'),
                 'description' => $product->getMeta('description'),
                 'price' => Utils::formatAmount($product->getMeta('price')),
+                'add_to_cart' => $addToCart ? \Forge\Modules\ForgeShoppingcart\Cart::addToButton($product->getId()): $addToCart
             ];
         }
 
