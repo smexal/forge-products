@@ -34,7 +34,7 @@ class ProductCollection extends DataCollection {
         return $builder->render();
     }
 
-    private function custom_fields() {
+    public function custom_fields() {
         $this->addFields([
             [
                 'key' => 'price',
