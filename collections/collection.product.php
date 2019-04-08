@@ -21,6 +21,7 @@ class ProductCollection extends DataCollection {
         $this->preferences['has_categories'] = true;
         $this->preferences['has_status'] = true;
         $this->preferences['has_image'] = true;
+        $this->preferences['has_order'] = true;
 
         $this->custom_fields();
     }

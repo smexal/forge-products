@@ -4,6 +4,7 @@ namespace Forge\Modules\ForgeProducts;
 
 use \Forge\Core\Abstracts\Component;
 use \Forge\Core\App\App;
+use \Forge\Core\App\ModifyHandler;
 use \Forge\Core\Classes\Utils;
 use \Forge\Core\Classes\Media;
 use \Forge\Core\Classes\Settings;
@@ -44,7 +45,7 @@ class ProductlistComponent extends Component {
         }
         $collection = App::instance()->cm->getCollection('forge-products');
         $items = $collection->items([
-            'order' => 'created',
+            'order' => 'sequence',
             'order_direction' => 'desc',
             'limit' => $limit,
             'status' => 'published'
@@ -73,7 +74,17 @@ class ProductlistComponent extends Component {
             ];
         }
 
-        return App::instance()->render(DOC_ROOT.'modules/forge-products/templates/', "productlist", [
+        $listingTemplateName = ModifyHandler::instance()->trigger(
+            'modify_product_listing_template_name',
+            'productlist'
+        );
+
+        $listingTemplatePath = ModifyHandler::instance()->trigger(
+            'modify_product_listing_template_path',
+            DOC_ROOT.'modules/forge-products/templates/'
+        );
+
+        return App::instance()->render($listingTemplatePath, $listingTemplateName, [
             'title' => $this->getField('title'),
             'products' => $products
         ]);
