@@ -2,7 +2,9 @@
 
 namespace Forge\Modules\ForgeProducts;
 
-use Forge\Core\Classes\Builder;
+use \Forge\Core\Classes\Builder;
+use \Forge\Core\Classes\Media;
+use \Forge\Core\Classes\Utils;
 use \Forge\Core\Abstracts\DataCollection;
 use \Forge\Core\Classes\Localization;
 use \Forge\Core\App\App;
@@ -27,7 +29,29 @@ class ProductCollection extends DataCollection {
     }
 
     public function render($item) {
-        return $item->getMeta('title');
+        $builder = new Builder('collection', $item->id, 'productContentBuilder');
+        $elements = $builder->getBuilderElements(Localization::getCurrentLanguage());
+
+        $builderContent = '';
+        foreach($elements as $element) {
+            $builderContent.=$element->content();
+        }
+
+        $addToCart = false;
+        if(App::instance()->mm->isActive('forge-shoppingcart')) {
+            $addToCart = true;
+        }
+
+        $image = new Media($item->getMeta('collection_image'));
+        return App::instance()->render(MOD_ROOT.'forge-products/templates/', 'product', [
+            'title' => $item->getMeta('title'),
+            'desc' => $item->getMeta('description'),
+            'image' => $image->getUrl(),
+            'builder' => $builderContent,
+            'price_label' => i('Price/unit', 'forge-products'),
+            'price' => Utils::formatAmount($item->getMeta('price')),
+            'add_to_cart' => $addToCart ? \Forge\Modules\ForgeShoppingcart\Cart::addToButton($item->getId(), ['amount_selection' => true]): $addToCart
+        ]);
     }
 
     public function customEditContent($id) {
