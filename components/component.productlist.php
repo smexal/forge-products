@@ -64,9 +64,14 @@ class ProductlistComponent extends Component {
             }
 
             $image = new Media($product->getMeta('collection_image'));
+            $imageSize = ModifyHandler::instance()->trigger(
+                'modify_product_listing_sized_image',
+                [260, 200]
+            );
+
             $products[] = [
                 'link' => $link,
-                'image' => $image->getSizedImage(260, 200),
+                'image' => $image->getSizedImage($imageSize[0], $imageSize[1]),
                 'title' => $product->getMeta('title'),
                 'description' => $product->getMeta('description'),
                 'price' => Utils::formatAmount($product->getMeta('price')),
